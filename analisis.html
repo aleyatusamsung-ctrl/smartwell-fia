@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SmartWell FIA — Tu Análisis</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F7A548;
+    --orange-dark: #E08830;
+    --bg: #FFF5E9;
+    --card-bg: #FFFAF4;
+    --text: #2D1A0E;
+    --muted: #9A7B5E;
+    --border: #F0DCBF;
+    --green: #4CAF7D;
+    --yellow: #F5C518;
+    --red: #E05555;
+    --blue: #4A90D9;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    max-width: 420px;
+    margin: 0 auto;
+    padding-bottom: 90px;
+  }
+  .header {
+    padding: 20px 20px 24px;
+    border-radius: 0 0 28px 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .back-btn {
+    border: none;
+    border-radius: 12px;
+    width: 38px; height: 38px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.06);
+    color: var(--text);
+  }
+  .header-info h1 { font-size: 18px; font-weight: 800; color: var(--text); }
+  .header-info p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* SCORE CARD */
+  .score-card {
+    margin: 0 16px 16px;
+    border-radius: 24px;
+    padding: 28px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes popIn { from { transform: scale(0.85); opacity:0; } to { transform: scale(1); opacity:1; } }
+  .score-emoji { font-size: 56px; margin-bottom: 10px; display: block; }
+  .score-title { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .score-sub { font-size: 14px; opacity: 0.85; }
+  .score-number { font-size: 48px; font-weight: 900; font-family: 'Poppins', sans-serif; margin: 12px 0; display: block; }
+  .score-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+
+  /* LEVEL BAR */
+  .level-bar-wrap { margin: 0 16px 16px; }
+  .level-segments {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .level-seg {
+    flex: 1;
+    height: 10px;
+    border-radius: 5px;
+    background: var(--border);
+    transition: background 0.4s;
+  }
+  .level-labels { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: var(--muted); }
+
+  /* ANALYSIS DETAILS */
+  .detail-card {
+    margin: 0 16px 12px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    animation: fadeUp 0.4s ease 0.2s both;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+  .detail-title {
+    font-size: 13px; font-weight: 800; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .detail-icon { font-size: 22px; }
+  .detail-info { flex: 1; }
+  .detail-label { font-size: 12px; color: var(--muted); }
+  .detail-value { font-size: 14px; font-weight: 700; color: var(--text); }
+  .detail-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .badge-good { background: #D6F5E3; color: #2E7D50; }
+  .badge-ok { background: #FFF3CC; color: #8B6914; }
+  .badge-bad { background: #FFE0E0; color: #B22222; }
+
+  /* MOTIVATIONAL LETTER */
+  .letter-card {
+    margin: 0 16px 12px;
+    border-radius: 20px;
+    padding: 22px 20px;
+    animation: fadeUp 0.4s ease 0.35s both;
+    position: relative;
+    overflow: hidden;
+  }
+  .letter-card::before {
+    content: '"';
+    position: absolute;
+    top: -10px; left: 10px;
+    font-size: 80px;
+    opacity: 0.15;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+  .letter-label {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .letter-text {
+    font-size: 15px;
+    line-height: 1.7;
+    font-style: italic;
+  }
+  .letter-sign {
+    margin-top: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0.7;
+  }
+
+  /* TIPS */
+  .tips-card {
+    margin: 0 16px 12px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 16px;
+    animation: fadeUp 0.4s ease 0.45s both;
+  }
+  .tip-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .tip-item:last-child { border-bottom: none; }
+  .tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  /* ACTIONS */
+  .actions { padding: 0 16px; display: flex; gap: 10px; animation: fadeUp 0.4s ease 0.5s both; }
+  .btn-action {
+    flex: 1;
+    padding: 14px;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.15s;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-action:hover { transform: translateY(-2px); }
+  .btn-primary { background: linear-gradient(135deg, var(--orange), var(--orange-dark)); color: white; box-shadow: 0 4px 16px rgba(247,165,72,0.4); }
+  .btn-secondary { background: var(--card-bg); color: var(--text); border: 1.5px solid var(--border); }
+
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 420px;
+    background: var(--card-bg); border-top: 1.5px solid var(--border);
+    display: flex; padding: 8px 0; z-index: 100;
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; padding: 6px 0; text-decoration: none;
+    color: var(--muted); font-size: 10px; font-weight: 700;
+  }
+  .nav-item .nav-icon { font-size: 22px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <button class="back-btn" onclick="window.location.href='medir.html'">←</button>
+  <div class="header-info">
+    <h1>Tu análisis de hoy</h1>
+    <p id="date-label"></p>
+  </div>
+</div>
+
+<div id="score-card-wrap"></div>
+<div id="level-bar-wrap"></div>
+<div id="details-wrap"></div>
+<div id="letter-wrap"></div>
+<div id="tips-wrap"></div>
+
+<div class="actions">
+  <a class="btn-action btn-secondary" href="resultados.html">📊 Ver semana</a>
+  <a class="btn-action btn-primary" href="home.html">🏠 Inicio</a>
+</div>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="home.html"><span class="nav-icon">🏠</span>Inicio</a>
+  <a class="nav-item" href="home.html"><span class="nav-icon">➕</span>Agregar</a>
+  <a class="nav-item active" href="medir.html"><span class="nav-icon">🩺</span>Medir</a>
+  <a class="nav-item" href="resultados.html"><span class="nav-icon">📊</span>Resultados</a>
+</nav>
+
+<script>
+const today = new Date().toISOString().split('T')[0];
+const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const d = new Date();
+document.getElementById('date-label').textContent = `${d.getDate()} de ${['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][d.getMonth()]} ${d.getFullYear()}`;
+
+const user = JSON.parse(localStorage.getItem('sw_current') || '{}');
+const key = 'sw_results_' + (user.dni || 'guest');
+const results = JSON.parse(localStorage.getItem(key) || '[]');
+const last = results[results.length - 1] || { score: 0, answers: {} };
+const score = last.score || 0;
+const ans = last.answers || {};
+
+// LEVELS: 0-2 = great, 3-5 = ok, 6-9 = high stress
+const levels = [
+  {
+    max: 2,
+    emoji: '😊',
+    title: '¡Estás genial!',
+    sub: 'Tu bienestar académico es óptimo hoy',
+    color: 'linear-gradient(135deg, #4CAF7D, #2E7D50)',
+    textColor: 'white',
+    badge: 'Nivel bajo de estrés',
+    segColor: '#4CAF7D',
+    segs: 1,
+    letter: `¡Hola! 🌟 Hoy es uno de esos días en que todo fluye. Tu mente está descansada, tu carga se siente manejable y tu ánimo está arriba. Eso no es casualidad: es el resultado de cuidarte.
+
+Aprovecha este momento de energía para avanzar en tus proyectos más importantes. Cuando te sientas bien, tienes la capacidad de hacer cosas increíbles. Confía en ese potencial que llevas dentro.
+
+Recuerda que el bienestar no es un lujo, sino una base para rendir mejor. Sigue así. Eres más capaz de lo que crees. 💪`,
+    tips: [
+      { icon: '📚', text: 'Aprovecha tu energía para avanzar en temas difíciles.' },
+      { icon: '🏃', text: 'Mantén el ritmo: una pequeña actividad física hoy suma mucho.' },
+      { icon: '🎯', text: 'Define 1 meta concreta para terminar el día con satisfacción.' },
+    ]
+  },
+  {
+    max: 5,
+    emoji: '😐',
+    title: 'Vas bien, ¡cuídate!',
+    sub: 'Hay señales de estrés moderado',
+    color: 'linear-gradient(135deg, #F5C518, #D4A800)',
+    textColor: '#2D1A0E',
+    badge: 'Estrés moderado',
+    segColor: '#F5C518',
+    segs: 2,
+    letter: `Hola 👋 Es normal tener días en que la mochila se siente un poco más pesada. Lo que describes hoy indica que estás manejando una carga considerable, pero que aún tienes recursos para seguir adelante.
+
+No tienes que ser perfecto/a ni rendir al 100% todos los días. Darte un respiro no es perder el tiempo: es recargar energías para dar lo mejor mañana.
+
+Un pequeño consejo: esta noche, antes de dormir, escribe tres cosas que sí lograste hoy. Verás que son más de las que recuerdas. Tú puedes con esto. 🌙`,
+    tips: [
+      { icon: '💧', text: 'Hidratación: toma agua regularmente. El cansancio mental aumenta sin ella.' },
+      { icon: '🛌', text: 'Intenta dormir al menos 7 horas esta noche.' },
+      { icon: '📝', text: 'Divide tus pendientes en tareas pequeñas y manejables.' },
+    ]
+  },
+  {
+    max: 9,
+    emoji: '😞',
+    title: 'Necesitas descanso',
+    sub: 'Detectamos señales de alto estrés',
+    color: 'linear-gradient(135deg, #E05555, #B22222)',
+    textColor: 'white',
+    badge: 'Estrés alto',
+    segColor: '#E05555',
+    segs: 3,
+    letter: `Oye, para un momento. Respira. 🌬️
+
+Lo que sientes es válido. La universidad puede ser muy exigente y es completamente normal llegar a un punto de saturación. No eres débil por sentirte así; de hecho, reconocerlo es ya el primer paso para estar mejor.
+
+Hoy, date permiso de hacer solo lo esencial. No tienes que resolver todo ahora. Si puedes, habla con alguien de confianza, un amigo, un familiar, un tutor. Estás rodeado/a de personas que quieren verte bien.
+
+Mañana, con un poco de descanso, el panorama será diferente. Eres más fuerte de lo que crees. Un día a la vez. 💛`,
+    tips: [
+      { icon: '🆘', text: 'Considera hablar con el servicio de bienestar de la USMP.' },
+      { icon: '📵', text: 'Desconéctate de pantallas 30 min antes de dormir.' },
+      { icon: '🧘', text: 'Prueba 5 min de respiración profunda: inhala 4s, exhala 6s.' },
+    ]
+  }
+];
+
+const level = score <= 2 ? levels[0] : score <= 5 ? levels[1] : levels[2];
+
+// Score card
+document.getElementById('score-card-wrap').innerHTML = `
+  <div class="score-card" style="background:${level.color};color:${level.textColor};margin:0 16px 12px;">
+    <span class="score-emoji">${level.emoji}</span>
+    <div class="score-title">${level.title}</div>
+    <div class="score-sub">${level.sub}</div>
+    <span class="score-number">${score}/9</span>
+    <div class="score-label">${level.badge}</div>
+  </div>
+`;
+
+// Level bar
+const segsHtml = [1,2,3].map(i => `
+  <div class="level-seg" style="background:${i <= level.segs ? level.segColor : ''}"></div>
+`).join('');
+document.getElementById('level-bar-wrap').innerHTML = `
+  <div class="level-bar-wrap" style="padding: 0 16px 12px;">
+    <div class="level-segments">${segsHtml}</div>
+    <div class="level-labels">
+      <span>Bienestar alto</span><span>Moderado</span><span>Estrés alto</span>
+    </div>
+  </div>
+`;
+
+// Details
+const sleepAns = ans.sleep || {};
+const pressAns = ans.pressure || {};
+const moodAns = ans.mood || {};
+const sleepLabels = { low: { t:'Menos de 5h', b:'bad' }, mid: { t:'5 a 7 horas', b:'ok' }, high: { t:'Más de 7h', b:'good' } };
+const pressLabels = { high: { t:'Muy pesado', b:'bad' }, mid: { t:'Normal', b:'ok' }, low: { t:'Leve', b:'good' } };
+const moodLabels = { great: { t:'Muy bien', b:'good' }, ok: { t:'Regular', b:'ok' }, bad: { t:'Bajo ánimo', b:'bad' } };
+
+document.getElementById('details-wrap').innerHTML = `
+  <div class="detail-card">
+    <div class="detail-title">🔍 Resumen de tus respuestas</div>
+    <div class="detail-row">
+      <div class="detail-icon">😴</div>
+      <div class="detail-info">
+        <div class="detail-label">Horas de sueño</div>
+        <div class="detail-value">${(sleepLabels[sleepAns.value] || {t:'—'}).t}</div>
+      </div>
+      <span class="detail-badge badge-${(sleepLabels[sleepAns.value] || {b:'ok'}).b}">${(sleepLabels[sleepAns.value] || {b:'ok'}).b === 'good' ? '✓ Bien' : (sleepLabels[sleepAns.value] || {b:'ok'}).b === 'ok' ? '~ Regular' : '⚠ Atención'}</span>
+    </div>
+    <div class="detail-row">
+      <div class="detail-icon">📚</div>
+      <div class="detail-info">
+        <div class="detail-label">Presión académica</div>
+        <div class="detail-value">${(pressLabels[pressAns.value] || {t:'—'}).t}</div>
+      </div>
+      <span class="detail-badge badge-${(pressLabels[pressAns.value] || {b:'ok'}).b}">${(pressLabels[pressAns.value] || {b:'ok'}).b === 'good' ? '✓ Bien' : (pressLabels[pressAns.value] || {b:'ok'}).b === 'ok' ? '~ Regular' : '⚠ Atención'}</span>
+    </div>
+    <div class="detail-row">
+      <div class="detail-icon">😊</div>
+      <div class="detail-info">
+        <div class="detail-label">Estado de ánimo</div>
+        <div class="detail-value">${(moodLabels[moodAns.value] || {t:'—'}).t}</div>
+      </div>
+      <span class="detail-badge badge-${(moodLabels[moodAns.value] || {b:'ok'}).b}">${(moodLabels[moodAns.value] || {b:'ok'}).b === 'good' ? '✓ Bien' : (moodLabels[moodAns.value] || {b:'ok'}).b === 'ok' ? '~ Regular' : '⚠ Atención'}</span>
+    </div>
+  </div>
+`;
+
+// Letter
+const bgLetter = score <= 2 ? '#D6F5E3' : score <= 5 ? '#FFF3CC' : '#FFE0E0';
+const textLetter = score <= 2 ? '#1D5235' : score <= 5 ? '#5A3A00' : '#6B0000';
+document.getElementById('letter-wrap').innerHTML = `
+  <div class="letter-card" style="background:${bgLetter};color:${textLetter};">
+    <div class="letter-label">💌 Carta para ti</div>
+    <div class="letter-text">${level.letter.replace(/\n\n/g, '<br><br>').replace(/\n/g, ' ')}</div>
+    <div class="letter-sign">— SmartWell FIA 🧠</div>
+  </div>
+`;
+
+// Tips
+document.getElementById('tips-wrap').innerHTML = `
+  <div class="tips-card">
+    <div class="detail-title">💡 Recomendaciones para hoy</div>
+    ${level.tips.map(t => `
+      <div class="tip-item">
+        <span class="tip-icon">${t.icon}</span>
+        <span class="tip-text">${t.text}</span>
+      </div>
+    `).join('')}
+  </div>
+`;
+</script>
+</body>
+</html>

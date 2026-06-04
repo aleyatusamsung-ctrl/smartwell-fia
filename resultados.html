@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SmartWell FIA — Resultados Semanales</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F7A548;
+    --orange-dark: #E08830;
+    --orange-light: #FFE8C8;
+    --bg: #FFF5E9;
+    --card-bg: #FFFAF4;
+    --text: #2D1A0E;
+    --muted: #9A7B5E;
+    --border: #F0DCBF;
+    --green: #4CAF7D;
+    --yellow: #F5C518;
+    --red: #E05555;
+    --blue: #4A90D9;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    max-width: 420px;
+    margin: 0 auto;
+    padding-bottom: 90px;
+  }
+  .header {
+    background: linear-gradient(135deg, #9B59B6, #7D3C98);
+    padding: 20px 20px 24px;
+    border-radius: 0 0 28px 28px;
+    box-shadow: 0 4px 20px rgba(155,89,182,0.3);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .back-btn {
+    background: rgba(255,255,255,0.2); border: none; border-radius: 12px;
+    width: 38px; height: 38px; color: white; font-size: 18px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .header-info { color: white; }
+  .header-info h1 { font-size: 18px; font-weight: 800; }
+  .header-info p { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+  /* SUMMARY CARDS */
+  .summary-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px; padding: 16px 16px 0;
+  }
+  .sum-card {
+    background: var(--card-bg); border: 1.5px solid var(--border);
+    border-radius: 16px; padding: 14px 10px; text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    animation: fadeUp 0.4s ease both;
+  }
+  .sum-card:nth-child(2) { animation-delay: 0.1s; }
+  .sum-card:nth-child(3) { animation-delay: 0.2s; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .sum-icon { font-size: 24px; margin-bottom: 4px; }
+  .sum-value { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); }
+  .sum-label { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-top: 2px; }
+
+  /* CHART */
+  .chart-card {
+    margin: 16px 16px 12px;
+    background: var(--card-bg); border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 20px 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    animation: fadeUp 0.4s ease 0.25s both;
+  }
+  .chart-title {
+    font-size: 14px; font-weight: 800; color: var(--text);
+    margin-bottom: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .chart-legend { display: flex; gap: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); font-weight: 600; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 140px; margin-bottom: 8px; }
+  .bar-wrap {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    height: 100%; justify-content: flex-end;
+  }
+  .bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    min-height: 4px;
+    transition: height 0.6s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+  .bar-score {
+    font-size: 9px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 4px;
+    color: var(--muted);
+  }
+  .bar-label { font-size: 10px; font-weight: 700; color: var(--muted); margin-top: 5px; text-align: center; }
+  .bar.green { background: linear-gradient(to top, #2E7D50, #4CAF7D); }
+  .bar.yellow { background: linear-gradient(to top, #D4A800, #F5C518); }
+  .bar.red { background: linear-gradient(to top, #B22222, #E05555); }
+  .bar.empty { background: var(--border); }
+
+  /* HISTORY LIST */
+  .section-title { font-size: 16px; font-weight: 800; color: var(--text); padding: 4px 16px 10px; }
+  .history-list { padding: 0 16px; }
+  .history-item {
+    background: var(--card-bg); border: 1.5px solid var(--border);
+    border-radius: 14px; padding: 12px 14px;
+    margin-bottom: 8px; display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    animation: fadeUp 0.3s ease both;
+  }
+  .hist-emoji { font-size: 24px; }
+  .hist-info { flex: 1; }
+  .hist-date { font-size: 12px; color: var(--muted); }
+  .hist-score { font-size: 14px; font-weight: 700; color: var(--text); }
+  .hist-badge {
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .hist-badge.good { background: #D6F5E3; color: #2E7D50; }
+  .hist-badge.ok { background: #FFF3CC; color: #8B6914; }
+  .hist-badge.bad { background: #FFE0E0; color: #B22222; }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 420px;
+    background: var(--card-bg); border-top: 1.5px solid var(--border);
+    display: flex; padding: 8px 0; z-index: 100;
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; padding: 6px 0; text-decoration: none;
+    color: var(--muted); font-size: 10px; font-weight: 700;
+  }
+  .nav-item .nav-icon { font-size: 22px; }
+  .nav-item.active { color: #9B59B6; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <button class="back-btn" onclick="window.location.href='home.html'">←</button>
+  <div class="header-info">
+    <h1>Resultados Semanales</h1>
+    <p>Seguimiento de tu bienestar</p>
+  </div>
+</div>
+
+<div class="summary-row" id="summary-row"></div>
+<div class="chart-card" id="chart-wrap"></div>
+<div class="section-title">📋 Historial reciente</div>
+<div class="history-list" id="history-list"></div>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="home.html"><span class="nav-icon">🏠</span>Inicio</a>
+  <a class="nav-item" href="home.html"><span class="nav-icon">➕</span>Agregar</a>
+  <a class="nav-item" href="medir.html"><span class="nav-icon">🩺</span>Medir</a>
+  <a class="nav-item active" href="resultados.html"><span class="nav-icon">📊</span>Resultados</a>
+</nav>
+
+<script>
+const user = JSON.parse(localStorage.getItem('sw_current') || '{}');
+const key = 'sw_results_' + (user.dni || 'guest');
+const allResults = JSON.parse(localStorage.getItem(key) || '[]');
+
+const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+function scoreLabel(s) {
+  if (s <= 2) return { label: 'Bienestar alto', cls: 'good', emoji: '😊' };
+  if (s <= 5) return { label: 'Estrés moderado', cls: 'ok', emoji: '😐' };
+  return { label: 'Estrés alto', cls: 'bad', emoji: '😞' };
+}
+
+function formatDateShort(str) {
+  const [y,m,d] = str.split('-');
+  return `${parseInt(d)} ${months[parseInt(m)-1]}`;
+}
+
+function formatDateFull(str) {
+  const [y,m,d] = str.split('-');
+  const days = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const dt = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
+  return `${days[dt.getDay()]} ${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+// SUMMARY
+const last7 = allResults.slice(-7);
+const avg = last7.length ? Math.round(last7.reduce((s,r) => s+r.score, 0) / last7.length * 10) / 10 : 0;
+const best = last7.length ? Math.min(...last7.map(r => r.score)) : 0;
+const worst = last7.length ? Math.max(...last7.map(r => r.score)) : 0;
+document.getElementById('summary-row').innerHTML = `
+  <div class="sum-card">
+    <div class="sum-icon">📊</div>
+    <div class="sum-value">${allResults.length}</div>
+    <div class="sum-label">Mediciones</div>
+  </div>
+  <div class="sum-card">
+    <div class="sum-icon">📉</div>
+    <div class="sum-value">${avg > 0 ? avg : '—'}</div>
+    <div class="sum-label">Prom. semana</div>
+  </div>
+  <div class="sum-card">
+    <div class="sum-icon">🏆</div>
+    <div class="sum-value">${last7.length ? best : '—'}</div>
+    <div class="sum-label">Mejor día</div>
+  </div>
+`;
+
+// CHART (last 7 days)
+function renderChart() {
+  const showData = last7.slice(-7);
+  if (!showData.length) {
+    document.getElementById('chart-wrap').innerHTML = `
+      <div class="empty-state" style="padding:30px 0;">
+        <div class="icon">📈</div>
+        <p>Realiza tu primera medición<br>para ver tus estadísticas aquí</p>
+      </div>
+    `;
+    return;
+  }
+  const maxScore = 9;
+  const bars = showData.map(r => {
+    const pct = Math.max((r.score / maxScore) * 100, 4);
+    const cls = r.score <= 2 ? 'green' : r.score <= 5 ? 'yellow' : 'red';
+    return `
+      <div class="bar-wrap">
+        <div class="bar-score">${r.score}</div>
+        <div class="bar ${cls}" style="height:${pct}%"></div>
+        <div class="bar-label">${formatDateShort(r.date)}</div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('chart-wrap').innerHTML = `
+    <div class="chart-title">
+      <span>📅 Últimos 7 días</span>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#4CAF7D"></div>Bajo</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#F5C518"></div>Mod.</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#E05555"></div>Alto</div>
+      </div>
+    </div>
+    <div class="bar-chart">${bars}</div>
+    <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:4px;">Índice de estrés (0=bajo, 9=alto)</div>
+  `;
+}
+
+renderChart();
+
+// HISTORY
+function renderHistory() {
+  const container = document.getElementById('history-list');
+  if (!allResults.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">🌱</div><p>Aún no tienes mediciones.<br><a href="medir.html" style="color:var(--orange);font-weight:700;">¡Haz tu primera medición!</a></p></div>`;
+    return;
+  }
+  const reversed = [...allResults].reverse().slice(0, 14);
+  container.innerHTML = reversed.map((r, i) => {
+    const sl = scoreLabel(r.score);
+    return `
+      <div class="history-item" style="animation-delay:${i*0.05}s">
+        <div class="hist-emoji">${sl.emoji}</div>
+        <div class="hist-info">
+          <div class="hist-date">${formatDateFull(r.date)}</div>
+          <div class="hist-score">Índice de estrés: ${r.score}/9</div>
+        </div>
+        <span class="hist-badge ${sl.cls}">${sl.label}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+renderHistory();
+</script>
+</body>
+</html>
