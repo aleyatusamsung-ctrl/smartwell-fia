@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SmartWell FIA — Inicio</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F7A548;
+    --orange-dark: #E08830;
+    --orange-light: #FFE8C8;
+    --bg: #FFF5E9;
+    --card-bg: #FFFAF4;
+    --text: #2D1A0E;
+    --muted: #9A7B5E;
+    --border: #F0DCBF;
+    --green: #4CAF7D;
+    --yellow: #F5C518;
+    --red: #E05555;
+    --blue: #4A90D9;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    max-width: 420px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+  }
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    padding: 20px 20px 28px;
+    border-radius: 0 0 28px 28px;
+    box-shadow: 0 4px 20px rgba(247,165,72,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content:'';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+  .header-top { display: flex; align-items: center; justify-content: space-between; }
+  .header-logo { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: white; }
+  .header-logo span { opacity: 0.8; font-weight: 400; }
+  .avatar-btn {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+  }
+  .greeting { margin-top: 14px; color: white; }
+  .greeting-sub { font-size: 13px; opacity: 0.85; }
+  .greeting-name { font-size: 20px; font-weight: 800; margin-top: 2px; }
+  /* QUICK ACTIONS */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 16px 16px 0;
+    margin-top: -20px;
+  }
+  .qa-btn {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .qa-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .qa-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .qa-icon.orange { background: var(--orange-light); }
+  .qa-icon.green { background: #D6F5E3; }
+  .qa-icon.blue { background: #D9ECFF; }
+  .qa-icon.yellow { background: #FFF3CC; }
+  .qa-text { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  /* SECTIONS */
+  .section-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    padding: 20px 16px 10px;
+  }
+  /* CALENDAR */
+  .calendar-card {
+    margin: 0 16px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .cal-month {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .cal-nav button {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    width: 30px; height: 30px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .cal-nav button:hover { background: var(--orange); color: white; border-color: var(--orange); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+  .cal-day-header { font-size: 10px; font-weight: 700; color: var(--muted); padding: 4px 0; text-transform: uppercase; }
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .cal-day:hover { background: var(--orange-light); }
+  .cal-day.today { background: var(--orange); color: white; box-shadow: 0 2px 8px rgba(247,165,72,0.4); }
+  .cal-day.has-task::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    width: 5px; height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+  }
+  .cal-day.has-task.today::after { background: white; }
+  .cal-day.other-month { color: #CCC; }
+  /* TASKS LIST */
+  .tasks-list { padding: 0 16px; }
+  .task-item {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+    transition: transform 0.15s;
+    cursor: pointer;
+  }
+  .task-item:hover { transform: translateX(4px); }
+  .task-color {
+    width: 8px;
+    min-height: 36px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .task-info { flex: 1; }
+  .task-name { font-size: 14px; font-weight: 700; color: var(--text); }
+  .task-date { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .task-note { font-size: 12px; color: var(--muted); margin-top: 2px; font-style: italic; }
+  .task-del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 16px;
+    padding: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+  .task-del:hover { opacity: 1; color: var(--red); }
+  .empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 10px; }
+  .empty-state p { font-size: 14px; }
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 420px;
+    background: var(--card-bg);
+    border-top: 1.5px solid var(--border);
+    display: flex;
+    padding: 8px 0 env(safe-area-inset-bottom);
+    z-index: 100;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 0;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    transition: color 0.2s;
+  }
+  .nav-item .nav-icon { font-size: 22px; }
+  .nav-item.active { color: var(--orange); }
+  /* Modal add task */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card-bg);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 40px;
+    width: 100%;
+    max-width: 420px;
+    animation: slideUp 0.3s ease;
+  }
+  .modal h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal h3 button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+  .form-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; margin-top: 14px; display: block; }
+  .form-input {
+    width: 100%;
+    padding: 13px 14px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    outline: none;
+  }
+  .form-input:focus { border-color: var(--orange); }
+  .btn-add {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 6px 20px rgba(247,165,72,0.4);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-logo">Smart<span>Well</span> FIA</div>
+    <button class="avatar-btn" onclick="logout()">👤</button>
+  </div>
+  <div class="greeting">
+    <div class="greeting-sub">Bienvenido/a 👋</div>
+    <div class="greeting-name" id="user-greeting">Estudiante FIA</div>
+  </div>
+</div>
+
+<div class="quick-actions">
+  <a class="qa-btn" href="home.html">
+    <div class="qa-icon orange">📅</div>
+    <div class="qa-text">Próximas entregas</div>
+  </a>
+  <a class="qa-btn" onclick="openAddTask()">
+    <div class="qa-icon green">➕</div>
+    <div class="qa-text">Agregar tarea</div>
+  </a>
+  <a class="qa-btn" href="medir.html">
+    <div class="qa-icon blue">🩺</div>
+    <div class="qa-text">¿Cómo estoy?</div>
+  </a>
+  <a class="qa-btn" href="resultados.html">
+    <div class="qa-icon yellow">📊</div>
+    <div class="qa-text">Resultado semanal</div>
+  </a>
+</div>
+
+<div class="section-title">📆 Calendario de Entregas</div>
+<div class="calendar-card">
+  <div class="cal-header">
+    <div class="cal-month" id="cal-month-label"></div>
+    <div class="cal-nav">
+      <button onclick="changeMonth(-1)">‹</button>
+      &nbsp;
+      <button onclick="changeMonth(1)">›</button>
+    </div>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<div class="section-title">📚 Tareas registradas</div>
+<div class="tasks-list" id="tasks-list"></div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <a class="nav-item active" href="home.html">
+    <span class="nav-icon">🏠</span>Inicio
+  </a>
+  <a class="nav-item" href="#" onclick="openAddTask()">
+    <span class="nav-icon">➕</span>Agregar
+  </a>
+  <a class="nav-item" href="medir.html">
+    <span class="nav-icon">🩺</span>Medir
+  </a>
+  <a class="nav-item" href="resultados.html">
+    <span class="nav-icon">📊</span>Resultados
+  </a>
+</nav>
+
+<!-- Modal Add Task -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <h3>Agregar Tarea <button onclick="closeAddTask()">✕</button></h3>
+    <label class="form-label">Nombre de la tarea</label>
+    <input class="form-input" type="text" id="t-name" placeholder="Ej: Trabajo final de Filosofía">
+    <label class="form-label">Curso</label>
+    <select class="form-input" id="t-curso">
+      <option value="">Elige un curso</option>
+    </select>
+    <label class="form-label">Fecha de entrega</label>
+    <input class="form-input" type="date" id="t-fecha">
+    <label class="form-label">Comentario (opcional)</label>
+    <input class="form-input" type="text" id="t-nota" placeholder="Notas o detalles...">
+    <button class="btn-add" onclick="addTask()">AGREGAR TAREA</button>
+  </div>
+</div>
+
+<script>
+const COURSES = {
+  sistemas: ['Matemática Discreta','Introducción a Sistemas de Información','Geometría Analítica','Filosofía','Electrónica Digital','Programación'],
+  civil: ['Cálculo I','Física I','Geometría Analítica','Filosofía','Mecánica Vectorial','Comunicación'],
+  industrial: ['Estadística','Economía','Geometría Analítica','Filosofía','Investigación de Operaciones','Programación'],
+  arquitectura: ['Diseño Arquitectónico','Historia del Arte','Geometría Analítica','Filosofía','Estructuras I','Dibujo Técnico'],
+  aeronautica: ['Cálculo I','Física I','Geometría Analítica','Filosofía','Aerodinámica','Meteorología'],
+};
+
+const COLORS = ['#F7A548','#4CAF7D','#4A90D9','#9B59B6','#E05555','#F5C518'];
+
+let currentDate = new Date();
+let calYear = currentDate.getFullYear();
+let calMonth = currentDate.getMonth();
+
+function getUser() {
+  return JSON.parse(localStorage.getItem('sw_current') || 'null');
+}
+
+function getTasks() {
+  const u = getUser();
+  if (!u) return [];
+  return JSON.parse(localStorage.getItem('sw_tasks_' + u.dni) || '[]');
+}
+
+function saveTasks(tasks) {
+  const u = getUser();
+  if (!u) return;
+  localStorage.setItem('sw_tasks_' + u.dni, JSON.stringify(tasks));
+}
+
+function init() {
+  const u = getUser();
+  if (!u) { window.location.href = 'index.html'; return; }
+  document.getElementById('user-greeting').textContent = 'DNI: ' + u.dni;
+
+  // Populate courses
+  const sel = document.getElementById('t-curso');
+  const courses = COURSES[u.carrera] || [];
+  courses.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c;
+    sel.appendChild(o);
+  });
+
+  renderCalendar();
+  renderTasks();
+}
+
+function renderCalendar() {
+  const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('cal-month-label').textContent = months[calMonth] + ' ' + calYear;
+
+  const tasks = getTasks();
+  const taskDates = new Set(tasks.map(t => t.fecha));
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  ['L','M','X','J','V','S','D'].forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-day-header';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const first = new Date(calYear, calMonth, 1);
+  const startDay = (first.getDay() + 6) % 7; // Monday start
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const prevDays = new Date(calYear, calMonth, 0).getDate();
+
+  for (let i = 0; i < startDay; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day other-month';
+    el.textContent = prevDays - startDay + 1 + i;
+    grid.appendChild(el);
+  }
+
+  const today = new Date();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day';
+    const dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    if (d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear())
+      el.classList.add('today');
+    if (taskDates.has(dateStr)) el.classList.add('has-task');
+    el.textContent = d;
+    grid.appendChild(el);
+  }
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderTasks() {
+  const tasks = getTasks();
+  const container = document.getElementById('tasks-list');
+  if (tasks.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>No tienes tareas registradas aún.<br>¡Agrega tu primera tarea!</p></div>';
+    return;
+  }
+  const sorted = [...tasks].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+  container.innerHTML = sorted.map((t, i) => `
+    <div class="task-item">
+      <div class="task-color" style="background:${COLORS[i % COLORS.length]}"></div>
+      <div class="task-info">
+        <div class="task-name">${t.curso}</div>
+        <div class="task-date">📅 ${formatDate(t.fecha)}</div>
+        ${t.nota ? `<div class="task-note">💬 ${t.nota}</div>` : ''}
+        <div class="task-date" style="color:#2D1A0E;font-weight:700;margin-top:4px;">📌 ${t.nombre}</div>
+      </div>
+      <button class="task-del" onclick="deleteTask(${i})">🗑</button>
+    </div>
+  `).join('');
+}
+
+function formatDate(str) {
+  if (!str) return '';
+  const [y,m,d] = str.split('-');
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+function openAddTask() { document.getElementById('modal').classList.add('open'); }
+function closeAddTask() { document.getElementById('modal').classList.remove('open'); }
+function closeModal(e) { if (e.target === document.getElementById('modal')) closeAddTask(); }
+
+function addTask() {
+  const nombre = document.getElementById('t-name').value.trim();
+  const curso = document.getElementById('t-curso').value;
+  const fecha = document.getElementById('t-fecha').value;
+  const nota = document.getElementById('t-nota').value.trim();
+  if (!nombre || !curso || !fecha) { alert('Completa nombre, curso y fecha.'); return; }
+  const tasks = getTasks();
+  tasks.push({ nombre, curso, fecha, nota });
+  saveTasks(tasks);
+  closeAddTask();
+  document.getElementById('t-name').value = '';
+  document.getElementById('t-nota').value = '';
+  renderTasks();
+  renderCalendar();
+}
+
+function deleteTask(idx) {
+  const tasks = getTasks();
+  const sorted = [...tasks].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+  const toRemove = sorted[idx];
+  const newTasks = tasks.filter(t => !(t.nombre === toRemove.nombre && t.fecha === toRemove.fecha && t.curso === toRemove.curso));
+  saveTasks(newTasks);
+  renderTasks();
+  renderCalendar();
+}
+
+function logout() {
+  localStorage.removeItem('sw_current');
+  window.location.href = 'index.html';
+}
+
+init();
+</script>
+</body>
+</html>
