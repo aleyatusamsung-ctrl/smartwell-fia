@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SmartWell FIA — ¿Cómo estoy?</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F7A548;
+    --orange-dark: #E08830;
+    --orange-light: #FFE8C8;
+    --bg: #FFF5E9;
+    --card-bg: #FFFAF4;
+    --text: #2D1A0E;
+    --muted: #9A7B5E;
+    --border: #F0DCBF;
+    --green: #4CAF7D;
+    --yellow: #F5C518;
+    --red: #E05555;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    max-width: 420px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+  }
+  .header {
+    background: linear-gradient(135deg, #4A90D9, #2D6FB5);
+    padding: 20px 20px 24px;
+    border-radius: 0 0 28px 28px;
+    box-shadow: 0 4px 20px rgba(74,144,217,0.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 12px;
+    width: 38px; height: 38px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .header-info { color: white; }
+  .header-info h1 { font-size: 18px; font-weight: 800; }
+  .header-info p { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+  .progress-wrap { padding: 16px 16px 0; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-weight: 700; margin-bottom: 6px; }
+  .progress-bar { height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #4A90D9, var(--orange)); border-radius: 10px; transition: width 0.4s ease; }
+
+  .question-card {
+    margin: 16px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 24px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  .q-step { font-size: 11px; font-weight: 800; color: #4A90D9; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .q-text { font-size: 18px; font-weight: 800; color: var(--text); line-height: 1.4; margin-bottom: 24px; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+  }
+  .option-btn:hover { border-color: #4A90D9; background: #EAF3FF; }
+  .option-btn.selected { border-color: #4A90D9; background: #EAF3FF; }
+  .option-btn.selected::after { content: '✓'; margin-left: auto; color: #4A90D9; font-weight: 900; }
+  .option-icon { font-size: 22px; }
+
+  .btn-next {
+    width: calc(100% - 32px);
+    margin: 0 16px;
+    padding: 15px;
+    background: linear-gradient(135deg, #4A90D9, #2D6FB5);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(74,144,217,0.4);
+    transition: transform 0.15s;
+    display: none;
+  }
+  .btn-next.visible { display: block; }
+  .btn-next:hover { transform: translateY(-2px); }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 420px;
+    background: var(--card-bg);
+    border-top: 1.5px solid var(--border);
+    display: flex;
+    padding: 8px 0;
+    z-index: 100;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 0;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .nav-item .nav-icon { font-size: 22px; }
+  .nav-item.active { color: #4A90D9; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <button class="back-btn" onclick="window.location.href='home.html'">←</button>
+  <div class="header-info">
+    <h1>¿Cómo estoy hoy?</h1>
+    <p>Evaluación de bienestar académico</p>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="prog-text">Pregunta 1 de 3</span>
+    <span id="prog-pct">33%</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="prog-fill" style="width:33%"></div>
+  </div>
+</div>
+
+<div id="question-area"></div>
+<button class="btn-next" id="btn-next" onclick="nextQuestion()">SIGUIENTE →</button>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="home.html"><span class="nav-icon">🏠</span>Inicio</a>
+  <a class="nav-item" href="home.html" onclick=""><span class="nav-icon">➕</span>Agregar</a>
+  <a class="nav-item active" href="medir.html"><span class="nav-icon">🩺</span>Medir</a>
+  <a class="nav-item" href="resultados.html"><span class="nav-icon">📊</span>Resultados</a>
+</nav>
+
+<script>
+const questions = [
+  {
+    id: 'sleep',
+    step: 'Pregunta 1 — Sueño',
+    text: '¿Cuántas horas pudiste dormir anoche?',
+    options: [
+      { label: 'Menos de 5 horas', icon: '😴', value: 'low', score: 3 },
+      { label: 'Entre 5 y 7 horas', icon: '😐', value: 'mid', score: 1 },
+      { label: 'Más de 7 horas', icon: '😊', value: 'high', score: 0 },
+    ]
+  },
+  {
+    id: 'pressure',
+    step: 'Pregunta 2 — Carga académica',
+    text: '¿Cómo sientes la presión de tus cursos hoy?',
+    options: [
+      { label: 'Muy pesado, me siento agobiado/a', icon: '🤯', value: 'high', score: 3 },
+      { label: 'Normal, lo puedo manejar', icon: '😐', value: 'mid', score: 1 },
+      { label: 'Leve, estoy tranquilo/a', icon: '😌', value: 'low', score: 0 },
+    ]
+  },
+  {
+    id: 'mood',
+    step: 'Pregunta 3 — Estado de ánimo',
+    text: '¿Cómo calificarías tu estado de ánimo hoy?',
+    options: [
+      { label: 'Me siento muy bien y motivado/a', icon: '😁', value: 'great', score: 0 },
+      { label: 'Más o menos, dentro de lo normal', icon: '😶', value: 'ok', score: 1 },
+      { label: 'Cansado/a, estresado/a o bajo de ánimo', icon: '😞', value: 'bad', score: 3 },
+    ]
+  }
+];
+
+let current = 0;
+let answers = {};
+
+function renderQuestion() {
+  const q = questions[current];
+  const pct = Math.round((current + 1) / questions.length * 100);
+  document.getElementById('prog-text').textContent = `Pregunta ${current+1} de ${questions.length}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('btn-next').classList.remove('visible');
+
+  const area = document.getElementById('question-area');
+  area.innerHTML = `
+    <div class="question-card">
+      <div class="q-step">${q.step}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="options">
+        ${q.options.map((o, i) => `
+          <button class="option-btn ${answers[q.id] === o.value ? 'selected' : ''}"
+            onclick="selectOption('${q.id}', '${o.value}', ${o.score}, this)">
+            <span class="option-icon">${o.icon}</span>
+            ${o.label}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function selectOption(qid, value, score, btn) {
+  answers[qid] = { value, score };
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('btn-next').classList.add('visible');
+  document.getElementById('btn-next').textContent = current < questions.length - 1 ? 'SIGUIENTE →' : 'VER MI ANÁLISIS 🔍';
+}
+
+function nextQuestion() {
+  if (current < questions.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    saveAndAnalyze();
+  }
+}
+
+function saveAndAnalyze() {
+  const totalScore = Object.values(answers).reduce((sum, a) => sum + a.score, 0);
+  const today = new Date().toISOString().split('T')[0];
+  const user = JSON.parse(localStorage.getItem('sw_current') || '{}');
+  const key = 'sw_results_' + (user.dni || 'guest');
+  const results = JSON.parse(localStorage.getItem(key) || '[]');
+  results.push({ date: today, score: totalScore, answers });
+  // Keep last 8 weeks
+  if (results.length > 56) results.shift();
+  localStorage.setItem(key, JSON.stringify(results));
+  window.location.href = 'analisis.html';
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
