@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SmartWell FIA — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F7A548;
+    --orange-dark: #E08830;
+    --orange-light: #FFDDB5;
+    --bg: #FFF5E9;
+    --card-bg: #FFFAF4;
+    --text: #2D1A0E;
+    --muted: #9A7B5E;
+    --border: #F0DCBF;
+    --green: #4CAF7D;
+    --red: #E05555;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-image: radial-gradient(circle at 20% 20%, rgba(247,165,72,0.12) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 80%, rgba(247,165,72,0.08) 0%, transparent 50%);
+  }
+  .phone-wrap {
+    width: 100%;
+    max-width: 390px;
+  }
+  .logo-area {
+    text-align: center;
+    margin-bottom: 28px;
+    animation: fadeDown 0.6s ease;
+  }
+  .logo-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    border-radius: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 24px rgba(247,165,72,0.4);
+  }
+  .logo-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+  .logo-title span { color: var(--orange); }
+  .logo-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 28px 24px;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 4px 32px rgba(247,165,72,0.08);
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+  .tabs {
+    display: flex;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 24px;
+    border: 1.5px solid var(--border);
+  }
+  .tab {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    border-radius: 9px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .tab.active {
+    background: var(--orange);
+    color: white;
+    box-shadow: 0 4px 12px rgba(247,165,72,0.4);
+  }
+  .section { display: none; }
+  .section.active { display: block; }
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    margin-top: 16px;
+  }
+  label:first-child { margin-top: 0; }
+  input, select {
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+  }
+  input:focus, select:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(247,165,72,0.15);
+  }
+  .btn-main {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 24px;
+    box-shadow: 0 6px 20px rgba(247,165,72,0.45);
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,165,72,0.55); }
+  .btn-main:active { transform: translateY(0); }
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 20px;
+  }
+  .footer-note a { color: var(--orange); font-weight: 700; text-decoration: none; }
+  @keyframes fadeDown {
+    from { opacity:0; transform: translateY(-20px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(20px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="phone-wrap">
+  <div class="logo-area">
+    <div class="logo-icon">🧠</div>
+    <div class="logo-title">Smart<span>Well</span> FIA</div>
+    <div class="logo-sub">Bienestar académico · USMP</div>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login')">Iniciar Sesión</button>
+      <button class="tab" onclick="switchTab('register')">Registrarse</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="section active" id="login">
+      <label>DNI</label>
+      <input type="text" id="dni-login" placeholder="Ingresa tu DNI" maxlength="8">
+      <label>Contraseña</label>
+      <input type="password" id="pass-login" placeholder="••••••••">
+      <button class="btn-main" onclick="doLogin()">ENTRAR</button>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="section" id="register">
+      <label>DNI</label>
+      <input type="text" id="dni-reg" placeholder="Ingresa tu DNI" maxlength="8">
+      <label>Carrera</label>
+      <select id="carrera-reg">
+        <option value="">Selecciona tu carrera</option>
+        <option value="sistemas">Ing. de Computación y Sistemas</option>
+        <option value="civil">Ingeniería Civil</option>
+        <option value="industrial">Ingeniería Industrial</option>
+        <option value="arquitectura">Arquitectura</option>
+        <option value="aeronautica">Ciencias Aeronáuticas</option>
+      </select>
+      <label>Contraseña</label>
+      <input type="password" id="pass-reg" placeholder="Crea tu contraseña">
+      <label>Repetir contraseña</label>
+      <input type="password" id="pass-reg2" placeholder="Repite tu contraseña">
+      <button class="btn-main" onclick="doRegister()">REGISTRARSE</button>
+    </div>
+  </div>
+  <div class="footer-note">FIA USMP · 2026 · <a href="#">Ayuda</a></div>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='register'));
+  });
+  document.querySelectorAll('.section').forEach((s,i) => {
+    s.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='register'));
+  });
+}
+
+function doLogin() {
+  const dni = document.getElementById('dni-login').value.trim();
+  const pass = document.getElementById('pass-login').value.trim();
+  const users = JSON.parse(localStorage.getItem('sw_users') || '[]');
+  const user = users.find(u => u.dni === dni && u.pass === pass);
+  if (!user) { alert('DNI o contraseña incorrectos.'); return; }
+  localStorage.setItem('sw_current', JSON.stringify(user));
+  window.location.href = 'home.html';
+}
+
+function doRegister() {
+  const dni = document.getElementById('dni-reg').value.trim();
+  const carrera = document.getElementById('carrera-reg').value;
+  const pass = document.getElementById('pass-reg').value;
+  const pass2 = document.getElementById('pass-reg2').value;
+  if (!dni || !carrera || !pass) { alert('Completa todos los campos.'); return; }
+  if (pass !== pass2) { alert('Las contraseñas no coinciden.'); return; }
+  const users = JSON.parse(localStorage.getItem('sw_users') || '[]');
+  if (users.find(u => u.dni === dni)) { alert('El DNI ya está registrado.'); return; }
+  users.push({ dni, carrera, pass });
+  localStorage.setItem('sw_users', JSON.stringify(users));
+  localStorage.setItem('sw_current', JSON.stringify({ dni, carrera, pass }));
+  window.location.href = 'home.html';
+}
+</script>
+</body>
+</html>
